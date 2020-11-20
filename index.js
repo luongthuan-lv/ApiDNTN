@@ -20,18 +20,19 @@ mongoose.connect('mongodb+srv://thuan:thuan123456@cluster0.25fre.mongodb.net/Tou
 
 // import các schema ở mục model
 let categoriesSchema = require('./model/categoriesSchema');
-let languagesSchema=require('./model/languagesSchema');
-
+let languagesSchema = require('./model/languagesSchema');
+let tourSchema = require('./model/tourSchema');
 
 // tạo collision trong code
 let Category = mongoose.model('category', categoriesSchema, 'categories');
 let Languages = mongoose.model('language', languagesSchema, 'languages');
+let Tour = mongoose.model('tour', tourSchema, 'tours');
 
 
 //chạy lên local host với port là 1212
 app.listen(process.env.PORT || 1212);
 console.log('Localhost: 1212');
-app.get('/login1', function (req, res) {
+app.get('/', function (req, res) {
 
     var kq = "3746347";
     res.send("HaHa: " + kq);
@@ -39,21 +40,28 @@ app.get('/login1', function (req, res) {
 
 //lây danh sách tour
 app.get('/get-tour-list', async (req, res) => {
-    let vi="5fb29dcf5fea350ad4f00734";
-    let en="5fb29ddc5fea350ad4f00735";
-    let ko="5fb29de95fea350ad4f00736";
-    let ch="5fb29df35fea350ad4f00737";
-    let fr="5fb29dfd5fea350ad4f00738";
-    let ind="5fb29e0a5fea350ad4f00739";
-    let ja="5fb29e155fea350ad4f0073a";
-    let ge="5fb29e1d5fea350ad4f0073b";
-    let ru="5fb29e285fea350ad4f0073c";
+    let vi = "5fb29dcf5fea350ad4f00734";
+    let en = "5fb29ddc5fea350ad4f00735";
+    let ko = "5fb29de95fea350ad4f00736";
+    let ch = "5fb29df35fea350ad4f00737";
+    let fr = "5fb29dfd5fea350ad4f00738";
+    let ind = "5fb29e0a5fea350ad4f00739";
+    let ja = "5fb29e155fea350ad4f0073a";
+    let ge = "5fb29e1d5fea350ad4f0073b";
+    let ru = "5fb29e285fea350ad4f0073c";
 
-   let languge = req.query.languge;
-    let list_tour = await Category.find().populate('languages').where({lang_id:languge});
+// truyền biến vào postman thì sẽ là language="......", không phải là lang="...."
+    let lang = req.query.language;
+    let list_tour = await Category.find().populate('languages').where({lang_id: lang});
     res.send(list_tour);
 });
 
+app.get('/get-place-list', async (req, res) => {
+    let lang = req.query.language;
+    let cate = req.query.category;
+    let list_place = await Tour.find().populate('languages').populate('categories').where({lang_id: lang,cate_id:cate});
+    res.send(list_place);
+});
 app.post('/add-category', async (req, res) => {
     let cate_name = req.body.cate_name;
     let router = req.body.router;
