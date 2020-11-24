@@ -46,7 +46,7 @@ app.get('/get-tour-list', async (req, res) => {
     let ch = "5fb29df35fea350ad4f00737";
     let fr = "5fb29dfd5fea350ad4f00738";
     let ind = "5fb29e0a5fea350ad4f00739";
-    let ja = "5fb29e155fea350ad4f0073a";
+    const ja = "5fb29e155fea350ad4f0073a";
     let ge = "5fb29e1d5fea350ad4f0073b";
     let ru = "5fb29e285fea350ad4f0073c";
 
