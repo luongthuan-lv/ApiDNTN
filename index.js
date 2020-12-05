@@ -22,11 +22,13 @@ mongoose.connect('mongodb+srv://thuan:thuan123456@cluster0.25fre.mongodb.net/Tou
 let categoriesSchema = require('./model/categoriesSchema');
 let languagesSchema = require('./model/languagesSchema');
 let tourSchema = require('./model/tourSchema');
+let reportSchema = require('./model/reportSchema');
 
 // tạo collision trong code
 let Category = mongoose.model('category', categoriesSchema, 'categories');
 let Languages = mongoose.model('language', languagesSchema, 'languages');
 let Tour = mongoose.model('tour', tourSchema, 'tours');
+let Report = mongoose.model('report', reportSchema, 'reports');
 
 
 //chạy lên local host với port là 1212
@@ -40,16 +42,6 @@ app.get('/', function (req, res) {
 
 //lây danh sách tour
 app.get('/get-tour-list', async (req, res) => {
-    let vi = "5fb29dcf5fea350ad4f00734";
-    let en = "5fb29ddc5fea350ad4f00735";
-    let ko = "5fb29de95fea350ad4f00736";
-    let ch = "5fb29df35fea350ad4f00737";
-    let fr = "5fb29dfd5fea350ad4f00738";
-    let ind = "5fb29e0a5fea350ad4f00739";
-    const ja = "5fb29e155fea350ad4f0073a";
-    let ge = "5fb29e1d5fea350ad4f0073b";
-    let ru = "5fb29e285fea350ad4f0073c";
-
 // truyền biến vào postman thì sẽ là language="......", không phải là lang="...."
     let lang = req.query.language;
     let list_tour = await Category.find().populate('languages').where({lang_id: lang});
@@ -59,32 +51,55 @@ app.get('/get-tour-list', async (req, res) => {
 app.get('/get-place-list', async (req, res) => {
     let lang = req.query.language;
     let cate = req.query.category;
-    let list_place = await Tour.find().populate('languages').populate('categories').where({lang_id: lang,cate_id:cate});
+    let list_place = await Tour.find().populate('languages').populate('categories').where({
+        lang_id: lang,
+        cate_id: cate
+    });
     res.send(list_place);
 });
-app.post('/add-category', async (req, res) => {
-    let cate_name = req.body.cate_name;
-    let router = req.body.router;
+app.post('/add-report', async (req, res) => {
+    var user = req.body.user;
+    var vehicle = req.body.vehicle;
+    var star = req.body.star;
+    var report = req.body.report;
+    var username = req.body.name;
+    var avatar = req.body.avatar;
+    var date = req.body.date;
 
-    try {
-        const addCategory = new Category({
-            cate_name: cate_name,
-            router: router
-        });
-
-        if (!addCategory) {
-            res.status(400).json({
-                message: 'Thêm thất bại!'
-            })
-        } else {
-            await addCategory.save();
-            res.json({
-                message: 'Thêm thành công!'
-            })
-        }
-    } catch (e) {
-        res.status(400).json({
-            message: 'Lỗi: ' + e
-        })
+    const data = new Report({
+        user: user,
+        tour: vehicle,
+        star: star,
+        report: report,
+        username: username,
+        avatar: avatar,
+        date: date
+    });
+    let condition = {
+        user: user,
+        tour: vehicle,
+    };
+    const rp = await Report.findOne(condition);
+    if (!rp) {
+        await data.save();
+        res.send('Thêm thành công (Khác id user hoặc tuyến)');
+    } else {
+        await Report.findOneAndUpdate(condition, ({
+            star: star,
+            report: report,
+            username: username,
+            avatar: avatar,
+            date: date
+        }));
+        res.send('Update thành công (Trùng id user hoặc tuyến')
     }
 });
+
+app.get('/get-all-report', async (req, res) => {
+    let tour = req.query.vehicle;
+    let allReport=await Report.find({tour:tour});
+    res.send(allReport);
+});
+
+
+
