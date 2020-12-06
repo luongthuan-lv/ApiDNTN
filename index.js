@@ -82,7 +82,7 @@ app.post('/add-report', async (req, res) => {
     const rp = await Report.findOne(condition);
     if (!rp) {
         await data.save();
-        res.send('Thêm thành công (Khác id user hoặc tuyến)');
+        res.send('0');
     } else {
         await Report.findOneAndUpdate(condition, ({
             star: star,
@@ -91,14 +91,22 @@ app.post('/add-report', async (req, res) => {
             avatar: avatar,
             date: date
         }));
-        res.send('Update thành công (Trùng id user hoặc tuyến')
+        res.send('1')
     }
 });
 
 app.get('/get-all-report', async (req, res) => {
     let tour = req.query.vehicle;
-    let allReport=await Report.find({tour:tour});
+    let allReport = await Report.find({tour: tour});
     res.send(allReport);
+});
+
+app.get('/agg-star', async (req, res) => {
+    let tour = req.query.vehicle;
+    const star = await Report.countDocuments({tour: tour});
+    console.log(star);
+
+
 });
 
 
