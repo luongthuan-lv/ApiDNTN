@@ -4,8 +4,8 @@ const reportSchema=new mongoose.Schema({
         type:String,
         required:false,
     },
-    tour:{
-        type:mongoose.Types.ObjectId,
+    vehicle_id:{
+        type:String,
         required: false,
     },
     star:{

@@ -68,7 +68,7 @@ app.post('/add-report', async (req, res) => {
 
     const data = new Report({
         user: user,
-        tour: vehicle,
+        vehicle_id: vehicle,
         star: star,
         report: report,
         username: username,
@@ -77,7 +77,7 @@ app.post('/add-report', async (req, res) => {
     });
     let condition = {
         user: user,
-        tour: vehicle,
+        vehicle_id: vehicle,
     };
     const rp = await Report.findOne(condition);
     if (!rp) {
@@ -97,7 +97,7 @@ app.post('/add-report', async (req, res) => {
 
 app.get('/get-all-report', async (req, res) => {
     let tour = req.query.vehicle;
-    let allReport = await Report.find({tour: tour});
+    let allReport = await Report.find({vehicle_id: tour});
     res.send(allReport);
 });
 
