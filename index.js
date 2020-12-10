@@ -53,7 +53,7 @@ app.get('/get-place-list', async (req, res) => {
     let cate = req.query.category;
     let list_place = await Tour.find().populate('languages').populate('categories').where({
         lang_id: lang,
-        cate_id: cate
+        vehicle_id: cate
     });
     res.send(list_place);
 });
@@ -101,13 +101,6 @@ app.get('/get-all-report', async (req, res) => {
     res.send(allReport);
 });
 
-app.get('/agg-star', async (req, res) => {
-    let tour = req.query.vehicle;
-    const star = await Report.countDocuments({tour: tour});
-    console.log(star);
-
-
-});
 
 
 

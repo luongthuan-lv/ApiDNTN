@@ -13,28 +13,32 @@ const tourSchema = new mongoose.Schema({
     avatar: {
         type: Array, default: null
     },
+    way: {
+        type: String,
+        default: null,
+    },
     lang_id: {
         type: mongoose.Types.ObjectId,
         ref: 'language'
     },
-    cate_id: {
+    vehicle_id: {
         type: mongoose.Types.ObjectId,
         ref: 'category'
     },
-    createdAt: { type: Number, default: Date.now },
-    updatedAt: { type: Number, default: null },
+    createdAt: {type: Number, default: Date.now},
+    updatedAt: {type: Number, default: null},
 });
 
-tourSchema.virtual("categories",{
+tourSchema.virtual("categories", {
     ref: "category",
     localField: "cate_id",
     foreignField: "_id"
 });
 
-tourSchema.virtual("languages",{
+tourSchema.virtual("languages", {
     ref: "language",
     localField: "lang_id",
     foreignField: "_id"
 });
 
-module.exports=tourSchema;
+module.exports = tourSchema;

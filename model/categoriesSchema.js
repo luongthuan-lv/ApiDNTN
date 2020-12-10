@@ -4,6 +4,14 @@ const categoriesSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    starCate:{
+        type:Number,
+        required:false,
+    },
+    vehicle_id:{
+        type:mongoose.Types.ObjectId,
+        required:false,
+    },
     cate_name: {
         type: String,
         required: false,
